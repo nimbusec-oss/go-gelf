@@ -29,6 +29,7 @@ type Writer struct {
 	mu               sync.Mutex
 	conn             net.Conn
 	hostname         string
+	optData          map[string]string
 	Facility         string // defaults to current process name
 	CompressionLevel int    // one of the consts from compress/flate
 	CompressionType  CompressType
@@ -112,6 +113,18 @@ func NewWriter(addr string) (*Writer, error) {
 	}
 
 	w.Facility = path.Base(os.Args[0])
+
+	return w, nil
+}
+
+// NewWriterWithData ccreates an new GELF Writer and adds the entries in OptData as Extra fields.
+// Note that GELF additional field names are supposed to start with an underscore.
+func NewWriterWithData(addr string, optData map[string]string) (*Writer, error) {
+	w, err := NewWriter(addr)
+	if err != nil {
+		return nil, err
+	}
+	w.optData = optData
 
 	return w, nil
 }
@@ -336,6 +349,10 @@ func (w *Writer) Write(p []byte) (n int, err error) {
 			"_file": file,
 			"_line": line,
 		},
+	}
+
+	for k, v := range w.optData {
+		m.Extra[k] = v
 	}
 
 	if err = w.WriteMessage(&m); err != nil {
