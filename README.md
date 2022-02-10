@@ -1,6 +1,14 @@
 go-gelf - GELF Library and Writer for Go
 ========================================
 
+Preface
+-------
+
+This is a fork of the github repo [https://github.com/Graylog2/go-gelf](https://github.com/Graylog2/go-gelf),
+Forking this repo was necessary to extend the functionality of this lib for our needs.
+The upstream repo does not seem to get any more development. and while there have been other forks more recently,
+they did not add any fixes or overall changes but, similarly only added minor additional functionality.
+
 [GELF] (Graylog Extended Log Format) is an application-level logging
 protocol that avoids many of the shortcomings of [syslog]. While it
 can be run over any stream or datagram transport protocol, it has
