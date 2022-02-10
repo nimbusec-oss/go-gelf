@@ -1,0 +1,2 @@
+test:
+  script: docker run --rm -v $(pwd):/go/src/gitlab.nimbu.sexy/core/go-gelf -w /go/src/gitlab.nimbu.sexy/core/go-gelf docker.nimbusec.com/golang go test -v ./gelf
