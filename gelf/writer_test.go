@@ -18,7 +18,7 @@ import (
 )
 
 func TestNewWriter(t *testing.T) {
-	w, err := NewWriter("")
+	w, err := NewWriter("", "")
 	if err == nil || w != nil {
 		t.Errorf("New didn't fail")
 		return
@@ -31,7 +31,7 @@ func sendAndRecv(msgData string, compress CompressType) (*Message, error) {
 		return nil, fmt.Errorf("NewReader: %s", err)
 	}
 
-	w, err := NewWriter(r.Addr())
+	w, err := NewWriter(r.Addr(), "")
 	if err != nil {
 		return nil, fmt.Errorf("NewWriter: %s", err)
 	}
@@ -50,7 +50,7 @@ func sendAndRecvMsg(msg *Message, compress CompressType) (*Message, error) {
 		return nil, fmt.Errorf("NewReader: %s", err)
 	}
 
-	w, err := NewWriter(r.Addr())
+	w, err := NewWriter(r.Addr(), "")
 	if err != nil {
 		return nil, fmt.Errorf("NewWriter: %s", err)
 	}
@@ -117,7 +117,7 @@ func TestWriteSmallOneLine(t *testing.T) {
 		return
 	}
 
-	if len(msg.Extra) != 2 {
+	if len(msg.Extra) != 3 {
 		t.Errorf("extra fields in %v (expect only file and line)", msg.Extra)
 		return
 	}
@@ -240,7 +240,7 @@ func BenchmarkWriteBestSpeed(b *testing.B) {
 		b.Fatalf("NewReader: %s", err)
 	}
 	go io.Copy(ioutil.Discard, r)
-	w, err := NewWriter(r.Addr())
+	w, err := NewWriter(r.Addr(), "")
 	if err != nil {
 		b.Fatalf("NewWriter: %s", err)
 	}
@@ -266,7 +266,7 @@ func BenchmarkWriteNoCompression(b *testing.B) {
 		b.Fatalf("NewReader: %s", err)
 	}
 	go io.Copy(ioutil.Discard, r)
-	w, err := NewWriter(r.Addr())
+	w, err := NewWriter(r.Addr(), "")
 	if err != nil {
 		b.Fatalf("NewWriter: %s", err)
 	}
@@ -292,7 +292,7 @@ func BenchmarkWriteDisableCompressionCompletely(b *testing.B) {
 		b.Fatalf("NewReader: %s", err)
 	}
 	go io.Copy(ioutil.Discard, r)
-	w, err := NewWriter(r.Addr())
+	w, err := NewWriter(r.Addr(), "")
 	if err != nil {
 		b.Fatalf("NewWriter: %s", err)
 	}
@@ -318,7 +318,7 @@ func BenchmarkWriteDisableCompressionAndPreencodeExtra(b *testing.B) {
 		b.Fatalf("NewReader: %s", err)
 	}
 	go io.Copy(ioutil.Discard, r)
-	w, err := NewWriter(r.Addr())
+	w, err := NewWriter(r.Addr(), "")
 	if err != nil {
 		b.Fatalf("NewWriter: %s", err)
 	}

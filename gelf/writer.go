@@ -100,7 +100,7 @@ func numChunks(b []byte) int {
 // New returns a new GELF Writer.  This writer can be used to send the
 // output of the standard Go log functions to a central GELF server by
 // passing it to log.SetOutput()
-func NewWriter(addr string) (*Writer, error) {
+func NewWriter(addr string, appname string) (*Writer, error) {
 	var err error
 	w := new(Writer)
 	w.CompressionLevel = flate.BestSpeed
@@ -112,6 +112,10 @@ func NewWriter(addr string) (*Writer, error) {
 		return nil, err
 	}
 
+	w.optData = map[string]string{
+		"_appname": appname,
+	}
+
 	w.Facility = path.Base(os.Args[0])
 
 	return w, nil
@@ -119,11 +123,15 @@ func NewWriter(addr string) (*Writer, error) {
 
 // NewWriterWithData ccreates an new GELF Writer and adds the entries in OptData as Extra fields.
 // Note that GELF additional field names are supposed to start with an underscore.
-func NewWriterWithData(addr string, optData map[string]string) (*Writer, error) {
-	w, err := NewWriter(addr)
+func NewWriterWithData(addr string, appname string, optData map[string]string) (*Writer, error) {
+	w, err := NewWriter(addr, appname)
 	if err != nil {
 		return nil, err
 	}
+	if optData == nil {
+		optData = map[string]string{}
+	}
+	optData["_appname"] = appname
 	w.optData = optData
 
 	return w, nil
