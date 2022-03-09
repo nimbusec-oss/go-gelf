@@ -1,3 +1,3 @@
-module gitlab.nimbu.sexy/core/go-gelf
+module github.com/nimbusec-oss/go-gelf
 
 go 1.17
