@@ -331,9 +331,6 @@ func (w *Writer) Write(p []byte) (n int, err error) {
 	// 1 for the function that called us.
 	file, line := getCallerIgnoringLogMulti(1)
 
-	// remove trailing and leading whitespace
-	p = bytes.TrimSpace(p)
-
 	// If there are newlines in the message, use the first line
 	// for the short message and set the full message to the
 	// original input.  If the input has no newlines, stick the

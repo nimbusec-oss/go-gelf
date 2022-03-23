@@ -87,42 +87,6 @@ func TestWriteSmallMultiLine(t *testing.T) {
 	}
 }
 
-// tests single-message (non-chunked) messages that are a single line long
-func TestWriteSmallOneLine(t *testing.T) {
-	msgData := "some awesome thing\n"
-	msgDataTrunc := msgData[:len(msgData)-1]
-
-	msg, err := sendAndRecv(msgData, CompressGzip)
-	if err != nil {
-		t.Errorf("sendAndRecv: %s", err)
-		return
-	}
-
-	// we should remove the trailing newline
-	if msg.Short != msgDataTrunc {
-		t.Errorf("msg.Short: expected %s, got %s",
-			msgDataTrunc, msg.Short)
-		return
-	}
-
-	if msg.Full != "" {
-		t.Errorf("msg.Full: expected %s, got %s", msgData, msg.Full)
-		return
-	}
-
-	fileExpected := "/go-gelf/gelf/writer_test.go"
-	if !strings.HasSuffix(msg.Extra["_file"].(string), fileExpected) {
-		t.Errorf("msg.File: expected %s, got %s", fileExpected,
-			msg.Extra["_file"].(string))
-		return
-	}
-
-	if len(msg.Extra) != 3 {
-		t.Errorf("extra fields in %v (expect only file and line)", msg.Extra)
-		return
-	}
-}
-
 func TestGetCaller(t *testing.T) {
 	file, line := getCallerIgnoringLogMulti(1000)
 	if line != 0 || file != "???" {
